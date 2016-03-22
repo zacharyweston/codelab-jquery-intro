@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Gas Money Calculator</title>
+    <link rel="stylesheet" href="">
+  </head>
+  <body>
+    <!-- 1st pair -->
+    <div class="js-markdown-previewer-container">
+      <textarea rows="1" class="js-markdown-input"></textarea>
+      <button disabled class="js-clear-markdown-button">Cleared</button>
+      <div class="js-markdown-preview empty"></div>
+    </div>
+
+    <!-- 2nd pair -->
+    <div class="js-markdown-previewer-container">
+      <textarea rows="1" class="js-markdown-input"></textarea>
+      <button disabled class="js-clear-markdown-button">Cleared</button>
+      <div class="js-markdown-preview empty"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autosize.js/3.0.14/autosize.min.js" charset="utf-8"></script>
+    <!-- <script src="/js/script.js" charset="utf-8"></script> -->
+    <script>
+
+      $('.js-markdown-previewer-container').each(function() {
+
+        // --------
+        // ELEMENTS
+        // --------
+
+        var $container = $(this)
+        var $markdownInput = $container.find('.js-markdown-input')
+        var $markdownPreview = $container.find('.js-markdown-preview')
+        var $clearMarkdownButton = $container.find('.js-clear-markdown-button')
+
+        // ---------
+        // RENDERERS
+        // ---------
+        function renderInput(markdown) {
+          $markdownInput.val(markdown)
+          // HACK: https://github.com/jackmoore/autosize/issues/165
+          autosize.update($markdownInput)
+        }
+
+        function renderClearButton(markdown) {
+          if (markdown.length > 0) {
+            $clearMarkdownButton.prop('disabled', false)
+            $clearMarkdownButton.text('Clear')
+          } else {
+            $clearMarkdownButton.prop('disabled', true)
+            $clearMarkdownButton.text('Cleared')
+          }
+        }
+
+        function renderPreview(markdown) {
+          $markdownPreview.html( marked(markdown) )
+          if (markdown.length > 0) {
+            $markdownPreview.removeClass('empty')
+          } else {
+            $markdownPreview.addClass('empty')
+          }
+        }
+
+        function renderAll(markdown) {
+          renderInput(markdown)
+          renderClearButton(markdown)
+          renderPreview(markdown)
+        }
+
+        // --------------
+        // INITIALIZATION
+        // --------------
+
+        function initialize() {
+          autosize($markdownInput)
+          renderAll($markdownInput.val())
+        }
+
+        initialize()
+
+        // ------
+        // EVENTS
+        // ------
+
+        $markdownInput.on('input', function() {
+          renderAll(this.value)
+        })
+
+        $clearMarkdownButton.on('click', function() {
+          renderAll('')
+        })
+
+      })
+    </script>
+  </body>
+</html>
